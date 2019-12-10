@@ -17,7 +17,7 @@ export default {
   computed: {
     layout() {
       let layout = this.$route.meta.layout;
-      if (!layout) layout = "DefaultLayout";
+      if (!layout) layout = "BottomLayout";
       return layout;
     }
   },
