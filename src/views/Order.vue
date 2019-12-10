@@ -44,6 +44,7 @@ export default {
   },
   created() {
     // this.socketId = uuidv1();
+    console.log("process.env.VUE_APP_WEBSOCKET", process.env.VUE_APP_WEBSOCKET);
     this.$socket.on("orderProcess:log", data => {
       this.processMessage.push(data);
     });
