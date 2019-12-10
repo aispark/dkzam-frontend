@@ -1,7 +1,7 @@
 import Vue from "vue";
 import io from "socket.io-client";
 
-const socket = io(process.env.VUE_APP_WEBSOCKET);
+const socket = io("https://dkzam-backend.herokuapp.com/");
 
 const SocketPlugin = {
   install(vue) {

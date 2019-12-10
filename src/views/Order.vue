@@ -55,7 +55,7 @@ export default {
       const {
         data: { resultList }
       } = await this.$axios.get(
-        `${process.env.VUE_APP_WEBSOCKET}/smartStore/placeOrder`,
+        `https://dkzam-backend.herokuapp.com/smartStore/placeOrder`,
         { params: { socketId: this.$socket.id } }
       );
       this.loading = false;
@@ -67,7 +67,7 @@ export default {
       const {
         data: { resultList }
       } = await this.$axios.get(
-        `${process.env.VUE_APP_WEBSOCKET}/smartStore/orderList`,
+        `https://dkzam-backend.herokuapp.com/smartStore/orderList`,
         { params: { socketId: this.$socket.id } }
       );
       console.log(resultList);
