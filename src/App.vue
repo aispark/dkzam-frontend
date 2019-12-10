@@ -1,32 +1,31 @@
+<!-- <router-link :to="{ name: 'login', params: { userId: 123 } }"
+      >Log in</router-link
+    > -->
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <component :is="layout">
+    <router-view />
+  </component>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import DefaultLayout from "@/layout/DefaultLayout";
+import NoFrameLayout from "@/layout/NoFrameLayout";
+import BottomLayout from "@/layout/BottomLayout";
+export default {
+  name: "app",
+  components: { DefaultLayout, NoFrameLayout, BottomLayout },
+  computed: {
+    layout() {
+      let layout = this.$route.meta.layout;
+      if (!layout) layout = "DefaultLayout";
+      return layout;
+    }
+  },
+  created() {},
+  methods: {
+    isLogin() {
+      return this.$route.name !== "login";
     }
   }
-}
-</style>
+};
+</script>
