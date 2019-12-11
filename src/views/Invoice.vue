@@ -27,7 +27,7 @@
     </v-row>
     <v-row align="center" justify="center">
       <v-col cols="12">
-        <ProgressMessage :items="processMessage" :isShow="isShow" :loading="loading" />
+        <ProgressMessage :items="processMessage" :loading="loading" />
       </v-col>
     </v-row>
     <v-row>
@@ -62,7 +62,6 @@ export default {
   data() {
     return {
       loading: false,
-      isShow: true,
       processMessage: [],
       items: [],
       headers: [
@@ -83,7 +82,6 @@ export default {
     async uploadInvoice() {
       this.processMessage = [];
       this.loading = true;
-      this.isShow = true;
 
       const {
         data: { resultList }
@@ -102,7 +100,6 @@ export default {
     async exportInvoice() {
       this.processMessage = [];
       this.loading = true;
-      this.isShow = true;
       const {
         data: { resultList }
       } = await this.$axios.get(
@@ -116,7 +113,6 @@ export default {
     async importInvoice() {
       this.processMessage = [];
       this.loading = true;
-      this.isShow = true;
       const {
         data: { resultList }
       } = await this.$axios.get(
