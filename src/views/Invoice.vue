@@ -1,77 +1,140 @@
 <template>
-  <v-stepper v-model="e1">
-    <v-stepper-header>
-      <template v-for="step in steps">
-        <v-stepper-step
-          :key="`${step.position}-step`"
-          :complete="e1 > step.position"
-          :step="step.position"
-          editable
-        >{{ step.title }}</v-stepper-step>
-
-        <v-divider v-if="step.position !== steps.length" :key="step.position"></v-divider>
-      </template>
-    </v-stepper-header>
-
-    <v-stepper-items>
-      <v-stepper-content
-        v-for="step in steps"
-        :key="`${step.position}-content`"
-        :step="step.position"
-      >
-        <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
-
-        <v-btn color="primary" @click="nextStep(step.position)">Continue</v-btn>
-
-        <v-btn text>Cancel</v-btn>
-      </v-stepper-content>
-    </v-stepper-items>
-  </v-stepper>
+  <v-container fluid>
+    <v-row align="center" justify="start">
+      <v-col cols="12">
+        <v-btn
+          class="mr-2"
+          color="secondary"
+          :loading="loading"
+          :disabled="loading"
+          @click="exportInvoice"
+        >송장 목록</v-btn>
+        <v-btn
+          class="ma-2"
+          color="secondary"
+          :loading="loading"
+          :disabled="loading"
+          @click="uploadInvoice"
+        >등록</v-btn>
+        <v-btn
+          class="ma-2"
+          color="secondary"
+          :loading="loading"
+          :disabled="loading"
+          @click="importInvoice"
+        >송장파일</v-btn>
+      </v-col>
+    </v-row>
+    <v-row align="center" justify="center">
+      <v-col cols="12">
+        <ProgressMessage :items="processMessage" :isShow="isShow" :loading="loading" />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col v-for="(item, index) in items" :key="item.invNo" cols="12" sm="6" md="4" lg="3">
+        <v-card>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="title font-weight-bold">{{item.acperNm}}</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-btn icon @click="deleteInvoice(index)">
+                <v-icon color="grey lighten-1">mdi-delete</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list dense>
+            <v-list-item v-for="header in headers" :key="item[header.value]">
+              <v-list-item-content>{{header.text}}:</v-list-item-content>
+              <v-list-item-content class="align-end list-item-content">{{item[header.value]}}</v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-// import HelloWorld from "@/components/HelloWorld.vue";
-
 export default {
-  name: "invoice",
+  name: "order",
   data() {
     return {
-      e1: 1,
-      steps: [
-        {
-          position: 1,
-          title: "롯데택배 송장 가져오기"
-        },
-        { position: 2, title: "스마트스토어 송장 등록" }
+      loading: false,
+      isShow: true,
+      processMessage: [],
+      items: [],
+      headers: [
+        { text: "주문번호", value: "orderNo" },
+        { text: "연락처", value: "acperTel" },
+        { text: "상품명", value: "gdsNm" },
+        { text: "송장번호", value: "invoiceNo" }
       ]
     };
   },
 
-  watch: {
-    steps(val) {
-      console.log(val);
-      if (this.e1 > val) {
-        this.e1 = val;
-      }
-    }
+  created() {
+    this.$socket.on("invoiceProcess:log", data => {
+      this.processMessage.push(data);
+    });
   },
-
   methods: {
-    nextStep(n) {
-      if (n === this.steps.length) {
-        this.e1 = 1;
-      } else {
-        this.e1 = n + 1;
-      }
+    async uploadInvoice() {
+      this.processMessage = [];
+      this.loading = true;
+      this.isShow = true;
+
+      const {
+        data: { resultList }
+      } = await this.$axios.get(
+        `${process.env.VUE_APP_WEBSOCKET}/smartStore/uploadInvoice`,
+        {
+          params: {
+            socketId: this.$socket.id,
+            items: this.items.map(item => item.invoiceNo)
+          }
+        }
+      );
+      this.loading = false;
+    },
+
+    async exportInvoice() {
+      this.processMessage = [];
+      this.loading = true;
+      this.isShow = true;
+      const {
+        data: { resultList }
+      } = await this.$axios.get(
+        `${process.env.VUE_APP_WEBSOCKET}/alps/invoiceList`,
+        { params: { socketId: this.$socket.id } }
+      );
+      this.items = resultList;
+      this.loading = false;
+    },
+
+    async importInvoice() {
+      this.processMessage = [];
+      this.loading = true;
+      this.isShow = true;
+      const {
+        data: { resultList }
+      } = await this.$axios.get(
+        `${process.env.VUE_APP_WEBSOCKET}/alps/importInvoiceList`,
+        { params: { socketId: this.$socket.id } }
+      );
+      this.items = resultList;
+      this.loading = false;
+    },
+
+    deleteInvoice(index) {
+      this.items.splice(index, 1);
     }
   }
 };
 </script>
 <style>
-@media only screen and (max-width: 959px) {
-  .v-stepper:not(.v-stepper--vertical) .v-stepper__label {
-    display: block !important;
-    margin-left: 8px;
-  }
+.list-item-content {
+  flex-grow: 2;
 }
 </style>
