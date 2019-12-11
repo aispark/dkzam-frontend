@@ -4,7 +4,14 @@
     <v-content>
       <slot />
     </v-content>
-    <v-bottom-navigation @change="goto" v-model="bottomNav" color="primary" grow fixed>
+    <v-bottom-navigation
+      app
+      @change="goto"
+      v-model="$store.state.bottomNav"
+      color="primary"
+      grow
+      fixed
+    >
       <v-btn value="order">
         <span>주문</span>
         <v-icon>mdi-cart</v-icon>
@@ -25,13 +32,14 @@
 export default {
   name: "bottomLayout",
   data() {
-    return {
-      bottomNav: "order"
-    };
+    return {};
+  },
+  mounted() {
+    // this.bottomNav = this.$route.name;
   },
   methods: {
     goto() {
-      this.$router.push({ name: this.bottomNav });
+      this.$router.push({ name: this.$store.state.bottomNav });
     }
   }
 };
