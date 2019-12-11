@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "@/store";
 
 Vue.use(VueRouter);
 
@@ -10,7 +11,8 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Order.vue"),
     meta: {
-      layout: "BottomLayout"
+      layout: "BottomLayout",
+      appBarTitle: "주문"
     }
   },
   {
@@ -28,7 +30,8 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Invoice.vue"),
     meta: {
-      layout: "BottomLayout"
+      layout: "BottomLayout",
+      appBarTitle: "송장"
     }
   }
 ];
@@ -37,6 +40,16 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach(function(to, from, next) {
+  store.dispatch("updateBottomNav", to.name);
+  store.dispatch(
+    "updateAppBarTitle",
+    (to.meta && to.meta.appBarTitle) || "Delivery Order"
+  );
+
+  next(); // 페이지 전환
 });
 
 export default router;
