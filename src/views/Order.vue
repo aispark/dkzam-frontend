@@ -15,7 +15,7 @@
           :loading="loading"
           :disabled="loading"
           @click="exportOrder"
-        >발주확인 목록</v-btn>
+        >발주확인목록</v-btn>
         <v-btn
           class="ma-2"
           color="secondary"
@@ -23,42 +23,48 @@
           :disabled="loading"
           @click="alpsUploadOrder"
         >등록</v-btn>
+        <v-btn
+          class="ma-2"
+          color="secondary"
+          :loading="loading"
+          :disabled="loading"
+          @click="importOrder"
+        >발주확인파일</v-btn>
       </v-col>
     </v-row>
     <v-row align="center" justify="center">
       <v-col cols="12">
-        <ProgressMessage :items="processMessage" :isShow="isShow" :loading="loading" />
+        <ProgressMessage :items="processMessage" :loading="loading" />
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-for="item in items" :key="item.productOrderId" cols="12" sm="6" md="4" lg="3">
+      <v-col
+        v-for="(item, index) in items"
+        :key="item.productOrderId"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
         <v-card>
-          <v-card-title class="subheading font-weight-bold">{{item.productOrderAddressName}}</v-card-title>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title class="title font-weight-bold">{{item.productOrderAddressName}}</v-list-item-title>
+            </v-list-item-content>
+            <v-list-item-action>
+              <v-btn icon @click="deleteOrder(index)">
+                <v-icon color="grey lighten-1">mdi-delete</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
           <v-divider></v-divider>
           <v-list dense>
-            <v-list-item>
-              <v-list-item-content>수취인:</v-list-item-content>
-              <v-list-item-content class="align-end">{{item.productOrderAddressName}}</v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>연락처:</v-list-item-content>
-              <v-list-item-content class="align-end">{{item.productOrderAddressTelno1}}</v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>상품명:</v-list-item-content>
-              <v-list-item-content class="align-end">{{item.oproductOrderProductProductName}}</v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>옵션:</v-list-item-content>
-              <v-list-item-content class="align-end">{{item.oproductOrderProductOptionContents}}</v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>수량:</v-list-item-content>
-              <v-list-item-content class="align-end">{{item.productOrderDetailOrderQuantity}}</v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-              <v-list-item-content>메모:</v-list-item-content>
-              <v-list-item-content class="align-end">{{item.productOrderMemo}}</v-list-item-content>
+            <v-list-item v-for="header in headers" :key="item[header.value]">
+              <v-list-item-content>{{header.text}}:</v-list-item-content>
+              <v-list-item-content
+                class="align-end list-item-content"
+                :class="quantityAccent(header.value, item[header.value])"
+              >{{item[header.value]}}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
@@ -73,24 +79,38 @@ export default {
   data() {
     return {
       loading: false,
-      isShow: true,
       processMessage: [],
-      items: []
+      items: [],
+      headers: [
+        { text: "수취인", value: "productOrderAddressName" },
+        { text: "연락처", value: "productOrderAddressTelno1" },
+        { text: "상품명", value: "oproductOrderProductProductName" },
+        { text: "옵션", value: "oproductOrderProductOptionContents" },
+        { text: "수량", value: "productOrderDetailOrderQuantity" },
+        { text: "메모", value: "productOrderMemo" }
+      ]
     };
   },
   created() {
-    // this.socketId = uuidv1();
-    // console.log("process.env.VUE_APP_WEBSOCKET", process.env.VUE_APP_WEBSOCKET);
     this.$socket.on("orderProcess:log", data => {
       this.processMessage.push(data);
     });
+  },
+  computed: {
+    quantityAccent() {
+      return (key, quantity) => {
+        if (key === "productOrderDetailOrderQuantity") {
+          return { "text-accent": quantity > 1 };
+        }
+        return {};
+      };
+    }
   },
   mounted() {},
   methods: {
     async placeOrder() {
       this.processMessage = [];
       this.loading = true;
-      this.isShow = true;
       const {
         data: { resultList }
       } = await this.$axios.get(
@@ -103,7 +123,6 @@ export default {
     async exportOrder() {
       this.processMessage = [];
       this.loading = true;
-      this.isShow = true;
       const {
         data: { resultList }
       } = await this.$axios.get(
@@ -111,34 +130,50 @@ export default {
         { params: { socketId: this.$socket.id } }
       );
       this.items = resultList;
-      // this.items = [
-      //   {
-      //     productOrderId: 1,
-      //     productOrderAddressName: 2,
-      //     productOrderAddressTelno1: 3,
-      //     productOrderAddressTelno2: 3,
-      //     productOrderAddressZipcode: 3,
-      //     productOrderAddressAddress: 3,
-      //     oproductOrderProductProductName: 3,
-      //     oproductOrderProductOptionContents: 3,
-      //     productOrderDetailOrderQuantity: 3,
-      //     productOrderMemo: 3
-      //   }
-      // ];
       this.loading = false;
     },
 
     async alpsUploadOrder() {
       this.processMessage = [];
       this.loading = true;
-      this.isShow = true;
       await this.$axios.get(
         `${process.env.VUE_APP_WEBSOCKET}/alps/uploadOrder`,
-        { params: { socketId: this.$socket.id } }
+        {
+          params: {
+            socketId: this.$socket.id,
+            items: this.items.map(item => item.productOrderId)
+          }
+        }
       );
       this.loading = false;
+    },
+
+    async importOrder() {
+      this.processMessage = [];
+      this.loading = true;
+      const {
+        data: { resultList }
+      } = await this.$axios.get(
+        `${process.env.VUE_APP_WEBSOCKET}/smartStore/importOrderList`,
+        { params: { socketId: this.$socket.id } }
+      );
+      this.items = resultList;
+      this.loading = false;
+    },
+
+    deleteOrder(index) {
+      this.items.splice(index, 1);
     }
   }
 };
 </script>
-<style></style>
+<style>
+.list-item-content {
+  flex-grow: 2;
+}
+
+.text-accent {
+  color: var(--v-primary-base);
+  font-weight: 900;
+}
+</style>
