@@ -92,6 +92,7 @@ export default {
     };
   },
   created() {
+    console.log("build");
     this.$socket.on("orderProcess:log", data => {
       this.processMessage.push(data);
     });
