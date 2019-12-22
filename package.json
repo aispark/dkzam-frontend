@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --port 3030",
+    "serve": "set VUE_APP_WEBSOCKET=http://localhost:3000&& vue-cli-service serve --port 3030",
     "build": "vue-cli-service build",
     "postbuild": "npx copy ./dist/**/* ../dkzam-backend/public"
   },
