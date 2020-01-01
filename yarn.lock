@@ -3377,6 +3377,11 @@ file-loader@^4.2.0:
     loader-utils "^1.2.3"
     schema-utils "^2.5.0"
 
+filepond@^4.9.3:
+  version "4.9.3"
+  resolved "https://registry.yarnpkg.com/filepond/-/filepond-4.9.3.tgz#f5fb0c70043bd2185e493cf9a726c6675629f654"
+  integrity sha512-sHv8b/GdiCxo6R+0poXULtHu/T8VH1zmIN/mrI+4Dg/ECFnhr/23YnxlphKFU8WFwz09ix48MRw8Stdjnju/BQ==
+
 filesize@^3.6.1:
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/filesize/-/filesize-3.6.1.tgz#090bb3ee01b6f801a8a8be99d31710b3422bb317"
@@ -8079,6 +8084,11 @@ vue-cli-plugin-vuetify@^2.0.2:
   dependencies:
     semver "^6.0.0"
     shelljs "^0.8.3"
+
+vue-filepond@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/vue-filepond/-/vue-filepond-6.0.0.tgz#737cba111d0850fb78b25631c3fff44d8eca43d4"
+  integrity sha512-jEg9cqVFHXntFaM5fmQP3GDAOsKRGYuMCNeN++1LtiNlnpQqTStFxOHM/8/jCMJApCKqS2jVvFXJIPNVm3s/vA==
 
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"

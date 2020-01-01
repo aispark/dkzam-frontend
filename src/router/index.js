@@ -33,6 +33,16 @@ const routes = [
       layout: "BottomLayout",
       appBarTitle: "송장"
     }
+  },
+  {
+    path: "/externalOrder",
+    name: "externalOrder",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/ExternalOrder.vue"),
+    meta: {
+      layout: "BottomLayout",
+      appBarTitle: "송하인 지정 주문"
+    }
   }
 ];
 

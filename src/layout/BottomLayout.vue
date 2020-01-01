@@ -21,9 +21,9 @@
         <span>송장</span>
         <v-icon>mdi-briefcase-check</v-icon>
       </v-btn>
-      <v-btn value="profile">
-        <span>프로필</span>
-        <v-icon>mdi-account</v-icon>
+      <v-btn value="externalOrder">
+        <span>지정주문</span>
+        <v-icon>mdi-cart-arrow-down</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </v-app>
