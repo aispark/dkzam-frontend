@@ -8,21 +8,24 @@
           :loading="loading"
           :disabled="loading"
           @click="exportInvoice"
-        >송장 목록</v-btn>
+          >송장 목록</v-btn
+        >
         <v-btn
           class="ma-2"
           color="secondary"
           :loading="loading"
           :disabled="loading"
           @click="uploadInvoice"
-        >등록</v-btn>
+          >등록</v-btn
+        >
         <v-btn
           class="ma-2"
           color="secondary"
           :loading="loading"
           :disabled="loading"
           @click="importInvoice"
-        >송장파일</v-btn>
+          >송장파일</v-btn
+        >
       </v-col>
     </v-row>
     <v-row align="center" justify="center">
@@ -31,11 +34,20 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-for="(item, index) in items" :key="item.invNo" cols="12" sm="6" md="4" lg="3">
+      <v-col
+        v-for="(item, index) in items"
+        :key="item.invNo"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
         <v-card>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="title font-weight-bold">{{item.acperNm}}</v-list-item-title>
+              <v-list-item-title class="title font-weight-bold">{{
+                item.acperNm
+              }}</v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
               <v-btn icon @click="deleteInvoice(index)">
@@ -46,8 +58,10 @@
           <v-divider></v-divider>
           <v-list dense>
             <v-list-item v-for="header in headers" :key="item[header.value]">
-              <v-list-item-content>{{header.text}}:</v-list-item-content>
-              <v-list-item-content class="align-end list-item-content">{{item[header.value]}}</v-list-item-content>
+              <v-list-item-content>{{ header.text }}:</v-list-item-content>
+              <v-list-item-content class="align-end list-item-content">{{
+                item[header.value]
+              }}</v-list-item-content>
             </v-list-item>
           </v-list>
         </v-card>
@@ -75,6 +89,7 @@ export default {
 
   created() {
     this.$socket.on("invoiceProcess:log", data => {
+      this.processMessage = [];
       this.processMessage.push(data);
     });
   },

@@ -161,6 +161,7 @@ export default {
   },
   created() {
     this.$socket.on("orderProcess:log", data => {
+      this.processMessage = [];
       this.processMessage.push(data);
     });
   },
