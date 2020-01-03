@@ -8,7 +8,8 @@
           :loading="loading"
           :disabled="loading"
           @click="addOrder()"
-        >추가</v-btn>
+          >추가</v-btn
+        >
 
         <v-btn
           class="ma-2"
@@ -16,7 +17,8 @@
           :loading="loading"
           :disabled="loading"
           @click="alpsUploadOrder"
-        >등록</v-btn>
+          >등록</v-btn
+        >
       </v-col>
     </v-row>
 
@@ -40,14 +42,19 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-for="(item, index) in items" :key="`order${index}`" cols="12" sm="6" md="4" lg="3">
+      <v-col
+        v-for="(item, index) in items"
+        :key="`order${index}`"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+      >
         <v-card :key="item.productOrderId">
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="title font-weight-bold">
-                {{
-                item.dispatcher
-                }}
+                {{ item.dispatcher }}
               </v-list-item-title>
             </v-list-item-content>
             <v-list-item-action>
@@ -71,7 +78,8 @@
               <v-list-item-content
                 class="align-end list-item-content"
                 :class="quantityAccent(header.value, item[header.value])"
-              >{{ item[header.value] }}</v-list-item-content>
+                >{{ item[header.value] }}</v-list-item-content
+              >
             </v-list-item>
           </v-list>
         </v-card>
@@ -116,7 +124,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary darken-1" text @click="dialog = false">Close</v-btn>
+          <v-btn color="primary darken-1" text @click="dialog = false"
+            >Close</v-btn
+          >
           <v-btn color="primary darken-1" text @click="updateOrder">Save</v-btn>
         </v-card-actions>
       </v-card>
@@ -181,6 +191,11 @@ export default {
     };
   },
   created() {
+    this.$socket.on("orderProcess:log", data => {
+      this.processMessage = [];
+      this.processMessage.push(data);
+    });
+
     this.$socket.on("recognizeProcess:log", data => {
       this.processMessage = [];
       this.processMessage.push(data);
