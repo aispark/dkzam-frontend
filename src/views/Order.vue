@@ -43,14 +43,6 @@
           @click="openOrder({}, items.length)"
           >추가</v-btn
         >
-        <v-btn
-          class="ma-2"
-          color="secondary"
-          :loading="loading"
-          :disabled="loading"
-          @click="selectPostNo"
-          >우편번호</v-btn
-        >
       </v-col>
     </v-row>
     <v-row align="center" justify="center">
@@ -244,24 +236,6 @@ export default {
       console.log(this.selectedItem);
       this.items[this.selectedIndex] = { ...this.selectedItem };
       this.dialog = false;
-    },
-
-    async selectPostNo() {
-      const {
-        data: {
-          results: { juso }
-        }
-      } = await this.$axios.get(
-        `http://www.juso.go.kr/addrlink/addrLinkApi.do`,
-        {
-          params: {
-            keyword: "서울 송파구 문정로83",
-            confmKey: "devU01TX0FVVEgyMDE5MTIyMTExMTQ0ODEwOTMzNzQ=",
-            resultType: "json"
-          }
-        }
-      );
-      console.log(juso);
     }
   }
 };
